@@ -16,4 +16,4 @@ Netlify runs the build from `netlify.toml` and publishes `dist`. Preview deploy 
 - `index.html` contains French language and SEO metadata.
 - `vite.config.ts` configures React, Tailwind and preview indexing.
 
-The CSS sculpture and existing reduced-motion behavior are intentional. The contact form is a disabled preview demo and does not send data. Keep that limitation explicit until a real service is implemented.
+The CSS sculpture and existing reduced-motion behavior are intentional. The contact form uses Netlify Forms: its static registration form in `index.html` must stay in sync with the React form in `src/App.tsx`. Local Vite cannot confirm delivery; verify a real submission in Netlify Forms after deployment. The privacy policy URL is supplied at build time with `VITE_PRIVACY_POLICY_URL` once the real page is published. Do not invent legal content or a placeholder URL.

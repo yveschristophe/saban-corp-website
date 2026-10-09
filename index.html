@@ -8,6 +8,16 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Netlify detects forms in the built HTML, before React renders. Keep field names in sync with App.tsx. -->
+    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="contact" />
+      <input name="bot-field" />
+      <input name="name" required />
+      <input name="company" />
+      <input name="email" type="email" required />
+      <input name="project" required />
+      <textarea name="message" required></textarea>
+    </form>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

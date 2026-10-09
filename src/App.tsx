@@ -8,7 +8,6 @@ import {
   CircleDot,
   Code2,
   Compass,
-  ExternalLink,
   Layers3,
   Menu,
   MonitorSmartphone,
@@ -130,6 +129,10 @@ const projects = [
   },
 ];
 
+type SubmitStatus = "idle" | "sending" | "success" | "error";
+
+const privacyPolicyUrl = import.meta.env.VITE_PRIVACY_POLICY_URL?.trim();
+
 function Brand() {
   return (
     <span className="brand" aria-label="Saban Corp">
@@ -205,6 +208,48 @@ function Sculpture() {
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
+  const mobileNavRef = useRef<HTMLElement>(null);
+  const pendingFocusTargetRef = useRef<string | null>(null);
+  const submissionInFlightRef = useRef(false);
+
+  function closeMobileMenu(href: string) {
+    pendingFocusTargetRef.current = href;
+    setMenuOpen(false);
+  }
+
+  async function handleContactSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (submissionInFlightRef.current) return;
+
+    const form = event.currentTarget;
+    if (!form.reportValidity()) return;
+
+    submissionInFlightRef.current = true;
+    setSubmitStatus("sending");
+
+    try {
+      const body = new URLSearchParams();
+      new FormData(form).forEach((value, key) => {
+        if (typeof value === "string") body.append(key, value);
+      });
+
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+      });
+
+      if (!response.ok) throw new Error(`Netlify Forms: HTTP ${response.status}`);
+      form.reset();
+      setSubmitStatus("success");
+    } catch {
+      setSubmitStatus("error");
+    } finally {
+      submissionInFlightRef.current = false;
+    }
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -222,36 +267,92 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) {
+      const href = pendingFocusTargetRef.current;
+      if (href) {
+        pendingFocusTargetRef.current = null;
+        const target = document.querySelector<HTMLElement>(href);
+        if (target) {
+          target.tabIndex = -1;
+          target.focus({ preventScroll: true });
+        }
+      }
+      return;
+    }
+
+    const toggle = menuToggleRef.current;
+    const links = Array.from(mobileNavRef.current?.querySelectorAll<HTMLAnchorElement>("a[href]") ?? []);
+    const focusable: HTMLElement[] = [...(toggle ? [toggle] : []), ...links];
+    const focusTimer = window.setTimeout(() => links[0]?.focus(), 50);
+
+    function handleMenuKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        toggle?.focus();
+        return;
+      }
+      if (event.key !== "Tab" || focusable.length === 0) return;
+
+      const current = document.activeElement;
+      if (event.shiftKey && current === focusable[0]) {
+        event.preventDefault();
+        focusable[focusable.length - 1].focus();
+      } else if (!event.shiftKey && current === focusable[focusable.length - 1]) {
+        event.preventDefault();
+        focusable[0].focus();
+      } else if (!focusable.includes(current as HTMLElement)) {
+        event.preventDefault();
+        focusable[0].focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleMenuKeyDown);
+    return () => {
+      window.clearTimeout(focusTimer);
+      document.removeEventListener("keydown", handleMenuKeyDown);
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const mobile = window.matchMedia("(max-width: 800px)");
+    const closeOnDesktop = () => {
+      if (!mobile.matches) setMenuOpen(false);
+    };
+    mobile.addEventListener("change", closeOnDesktop);
+    return () => mobile.removeEventListener("change", closeOnDesktop);
+  }, []);
+
   return (
     <div className="site-shell">
       <header className={`nav ${scrolled ? "nav-scrolled" : ""}`}>
-        <a href="#accueil" className="brand-link" aria-label="Saban Corp — Accueil"><Brand /></a>
+        <a href="#accueil" className="brand-link" aria-label="Saban Corp — Accueil" onClick={() => setMenuOpen(false)}><Brand /></a>
         <nav className="desktop-nav" aria-label="Navigation principale">
           {navItems.map(([label, href]) => <a href={href} key={href}>{label}</a>)}
         </nav>
         <a className="nav-cta" href="#contact">Parlons de votre projet <ArrowRight size={15} /></a>
-        <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}>
+        <button ref={menuToggleRef} className="menu-toggle" type="button" onClick={() => setMenuOpen(!menuOpen)} aria-controls="mobile-navigation" aria-expanded={menuOpen} aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}>
           {menuOpen ? <X /> : <Menu />}
         </button>
-        <div className={`mobile-nav ${menuOpen ? "mobile-nav-open" : ""}`}>
+        <nav id="mobile-navigation" ref={mobileNavRef} className={`mobile-nav ${menuOpen ? "mobile-nav-open" : ""}`} aria-label="Navigation mobile" aria-hidden={!menuOpen}>
           {navItems.map(([label, href], index) => (
-            <a href={href} key={href} onClick={() => setMenuOpen(false)}>
+            <a href={href} key={href} onClick={() => closeMobileMenu(href)}>
               <span>0{index + 1}</span>{label}<ChevronRight size={18} />
             </a>
           ))}
-          <ButtonLink href="#contact" className="mobile-contact" onClick={() => setMenuOpen(false)}>Parlons de votre projet</ButtonLink>
-        </div>
+          <ButtonLink href="#contact" className="mobile-contact" onClick={() => closeMobileMenu("#contact")}>Parlons de votre projet</ButtonLink>
+        </nav>
       </header>
 
-      <main>
+      <main inert={menuOpen}>
         <section className="hero section-grid" id="accueil">
           <div className="hero-grid-bg" />
           <div className="hero-content">
             <Eyebrow>SABAN CORP — STUDIO DIGITAL INDÉPENDANT</Eyebrow>
             <h1>
-              <span>Votre entreprise mérite</span>
-              <span>une présence digitale</span>
-              <span className="headline-accent">à sa hauteur.</span>
+              <span>Des sites web</span>
+              <span>à la hauteur de</span>
+              <span className="headline-accent">votre entreprise.</span>
             </h1>
             <p className="hero-copy">Nous concevons des sites web modernes et des solutions digitales sur mesure pour aider les indépendants et les entreprises à renforcer leur image, simplifier leurs outils et développer leur activité.</p>
             <div className="hero-actions">
@@ -352,7 +453,6 @@ function App() {
                 </div>
                 <div className="project-info">
                   <div><span>{project.type}</span><h3>{project.title}</h3><p>{project.text}</p></div>
-                  <span className="reserved-link" title="Lien réservé — projet à venir"><ExternalLink size={18} /></span>
                 </div>
               </article>
             ))}
@@ -408,30 +508,37 @@ function App() {
               <p>Les coordonnées directes seront configurées avant la mise en ligne.</p>
             </div>
           </div>
-          <form className="contact-form reveal" onSubmit={(event) => event.preventDefault()}>
-            <p className="form-note" role="status">Formulaire de démonstration : l'envoi est désactivé dans cette preview. Aucune demande n'est transmise.</p>
+          <form className="contact-form reveal" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" aria-busy={submitStatus === "sending"} onSubmit={handleContactSubmit} onChange={() => {
+            if (submitStatus !== "sending") setSubmitStatus("idle");
+          }}>
+            <input type="hidden" name="form-name" value="contact" />
+            <div className="honeypot-field" aria-hidden="true"><label>Ne pas remplir ce champ<input name="bot-field" tabIndex={-1} autoComplete="off" /></label></div>
             <div className="form-row">
-              <label>Nom *<input name="name" type="text" placeholder="Votre nom" /></label>
-              <label>Entreprise<input name="company" type="text" placeholder="Nom de votre entreprise" /></label>
+              <label>Nom *<input name="name" type="text" autoComplete="name" placeholder="Votre nom" required /></label>
+              <label>Entreprise<input name="company" type="text" autoComplete="organization" placeholder="Nom de votre entreprise" /></label>
             </div>
-            <label>Email professionnel *<input name="email" type="email" placeholder="vous@entreprise.fr" /></label>
+            <label>Email professionnel *<input name="email" type="email" autoComplete="email" placeholder="vous@entreprise.fr" required /></label>
             <label>Type de projet *
-              <select name="project" defaultValue="">
+              <select name="project" defaultValue="" required>
                 <option value="" disabled>Sélectionnez une option</option>
                 <option>Création de site</option><option>Refonte de site</option><option>Visibilité locale</option><option>Maintenance</option><option>Autre projet</option>
               </select>
             </label>
-            <label>Votre besoin *<textarea name="message" rows={4} placeholder="Parlez-nous de votre activité, de vos objectifs et de vos délais..." /></label>
-            <label className="consent"><input type="checkbox" required /><span>J'accepte que mes informations soient utilisées uniquement pour répondre à ma demande. Aucun usage commercial sans mon accord.</span></label>
-            <button className="button submit-button" type="button" disabled>
-              <span>Envoi indisponible en preview</span>
+            <label>Votre besoin *<textarea name="message" rows={4} placeholder="Parlez-nous de votre activité, de vos objectifs et de vos délais..." required /></label>
+            <p className="privacy-note">Les informations saisies servent à répondre à votre demande. {privacyPolicyUrl ? <a href={privacyPolicyUrl}>Consulter la politique de confidentialité</a> : <span>La politique de confidentialité sera publiée prochainement.</span>}</p>
+            <button className="button submit-button" type="submit" disabled={submitStatus === "sending"}>
+              <span>{submitStatus === "sending" ? "Envoi en cours…" : "Envoyer ma demande"}</span>
               <ArrowRight size={17} />
             </button>
+            <div className="form-feedback" role={submitStatus === "error" ? "alert" : "status"} aria-live={submitStatus === "error" ? "assertive" : "polite"}>
+              {submitStatus === "success" && "Votre demande a été transmise. Nous vous répondrons dès que possible."}
+              {submitStatus === "error" && "L'envoi n'a pas abouti. Réessayez plus tard."}
+            </div>
           </form>
         </section>
       </main>
 
-      <footer>
+      <footer inert={menuOpen}>
         <div className="footer-main">
           <div><Brand /><p>Des expériences digitales précises, utiles et durables.</p></div>
           <div className="footer-nav">{navItems.slice(1).map(([label, href]) => <a href={href} key={href}>{label}</a>)}</div>
