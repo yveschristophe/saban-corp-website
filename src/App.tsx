@@ -22,7 +22,7 @@ import {
 const navItems = [
   ["Accueil", "#accueil"],
   ["Solutions", "#solutions"],
-  ["Réalisations", "#realisations"],
+  ["Cas d'usage", "#cas-usage"],
   ["Notre approche", "#approche"],
   ["À propos", "#a-propos"],
   ["Contact", "#contact"],
@@ -39,7 +39,7 @@ const solutions = [
   {
     name: "SABAN START",
     price: "490 € HT",
-    intro: "Pour lancer une présence en ligne professionnelle, claire et essentielle.",
+    intro: "Pour présenter votre activité avec un site professionnel et permettre à vos futurs clients de vous contacter.",
     features: [
       "Site vitrine one-page",
       "Design responsive",
@@ -53,7 +53,7 @@ const solutions = [
   {
     name: "SABAN BUSINESS",
     price: "890 € HT",
-    intro: "Pour construire un site commercial plus complet, pensé pour vos clients.",
+    intro: "Pour détailler vos prestations, renforcer votre crédibilité et faciliter les demandes de devis.",
     features: [
       "Jusqu'à 4 pages",
       "Design personnalisé",
@@ -69,7 +69,7 @@ const solutions = [
   {
     name: "SABAN VISIBILITY",
     price: "129 € HT / mois",
-    intro: "Pour bénéficier d'un accompagnement digital régulier et pragmatique.",
+    intro: "Pour assurer le suivi technique de votre site et bénéficier d'améliorations régulières selon un périmètre défini ensemble.",
     features: [
       "Maintenance et suivi technique",
       "Accompagnement visibilité locale",
@@ -84,55 +84,55 @@ const solutions = [
 const expertise = [
   {
     title: "Création de sites web",
-    text: "Des sites élégants, rapides et conçus pour transformer l'intérêt en prise de contact.",
+    text: "Des sites vitrines modernes, adaptés au mobile et conçus pour présenter clairement votre activité.",
     icon: MonitorSmartphone,
     size: "wide",
   },
   {
     title: "WordPress & sur mesure",
-    text: "La solution technique adaptée à votre autonomie, votre budget et vos ambitions.",
+    text: "Des outils choisis selon vos besoins, avec une attention portée à la simplicité de gestion et à l'évolutivité.",
     icon: Code2,
+    size: "wide",
   },
   {
     title: "Expérience utilisateur",
-    text: "Des parcours simples qui permettent à vos visiteurs de trouver rapidement l'essentiel.",
+    text: "Des parcours intuitifs pour aider vos visiteurs à trouver l'information et passer à l'action.",
     icon: Compass,
   },
   {
     title: "Visibilité locale & SEO",
-    text: "Des fondations techniques propres pour être compris par les moteurs de recherche.",
+    text: "Des fondations techniques et des contenus structurés pour améliorer la lisibilité de votre site auprès des moteurs de recherche.",
     icon: Search,
   },
   {
     title: "Automatisation",
-    text: "Des tâches répétitives simplifiées pour consacrer plus de temps à votre activité.",
+    text: "Des fonctionnalités pour simplifier certaines tâches répétitives et fluidifier vos processus.",
     icon: Workflow,
   },
   {
     title: "Intégrations IA",
-    text: "Des usages ciblés et utiles, intégrés sans complexité inutile à vos outils.",
+    text: "Des possibilités d'intégration ciblées lorsque l'intelligence artificielle apporte une utilité concrète.",
     icon: Sparkles,
-    size: "wide",
   },
 ];
 
-const projects = [
+const useCases = [
   {
-    type: "CONCEPT 01",
-    title: "Site vitrine professionnel",
-    text: "Une présence structurée pour présenter un savoir-faire avec clarté.",
+    type: "SITE VITRINE",
+    title: "Présenter son activité avec confiance.",
+    text: "Une vitrine professionnelle pour expliquer vos prestations, valoriser votre savoir-faire et rendre vos coordonnées accessibles.",
     visual: "visual-one",
   },
   {
-    type: "CONCEPT 02",
-    title: "Présence digitale locale",
-    text: "Une interface sobre orientée découverte et prise de contact.",
+    type: "REFONTE WEB",
+    title: "Donner un nouveau souffle à son image.",
+    text: "Une interface plus actuelle, une navigation claire et une expérience pensée pour les visiteurs sur ordinateur comme sur mobile.",
     visual: "visual-two",
   },
   {
-    type: "DÉMONSTRATION 03",
-    title: "Expérience web moderne",
-    text: "Une direction artistique éditoriale, fluide et distinctive.",
+    type: "OUTILS DIGITAUX",
+    title: "Faciliter les échanges et gagner du temps.",
+    text: "Formulaires avancés, prise de rendez-vous ou fonctionnalités personnalisées : des outils adaptés à votre fonctionnement.",
     visual: "visual-three",
   },
 ];
@@ -378,18 +378,18 @@ function App() {
         <section className="hero section-grid" id="accueil">
           <div className="hero-grid-bg" />
           <div className="hero-content">
-            <Eyebrow>SABAN CORP — STUDIO DIGITAL INDÉPENDANT</Eyebrow>
+            <Eyebrow>SABAN CORP — STUDIO DIGITAL INDÉPENDANT À TOULOUSE</Eyebrow>
             <h1>
               <span>Des sites web</span>
               <span>à la hauteur de</span>
               <span className="headline-accent">votre entreprise.</span>
             </h1>
-            <p className="hero-copy">Nous concevons des sites web modernes et des solutions digitales sur mesure pour aider les indépendants et les entreprises à renforcer leur image, simplifier leurs outils et développer leur activité.</p>
+            <p className="hero-copy">SABAN CORP conçoit des sites internet modernes et des solutions digitales pour les professionnels. Design soigné, expertise technique et accompagnement direct : une présence en ligne pensée pour valoriser votre activité et faciliter les échanges avec vos futurs clients.</p>
             <div className="hero-actions">
-              <ButtonLink href="#contact">Discutons de votre projet</ButtonLink>
+              <ButtonLink href="#contact">Parlons de votre projet</ButtonLink>
               <ButtonLink href="#solutions" secondary>Découvrir nos solutions</ButtonLink>
             </div>
-            <div className="trust-line"><CircleDot size={14} /> Basé à Toulouse <i /> Accompagnement personnalisé</div>
+            <div className="trust-line"><CircleDot size={14} /> Toulouse, France <i /> Un interlocuteur dédié</div>
           </div>
           <div className="hero-sculpture"><Sculpture /></div>
           <a href="#mission" className="scroll-cue"><ArrowDown size={16} /> Explorer</a>
@@ -399,14 +399,14 @@ function App() {
         <section className="section mission" id="mission">
           <div className="section-intro reveal">
             <Eyebrow>01 / NOTRE MISSION</Eyebrow>
-            <h2>Le digital au service<br />de votre ambition.</h2>
-            <p>Un site web ne devrait pas simplement être esthétique. Il doit inspirer confiance, faciliter les échanges et accompagner le développement de votre activité.</p>
+            <h2>Votre savoir-faire mérite une présence qui inspire confiance.</h2>
+            <p>Votre site internet est souvent l'un des premiers contacts entre votre entreprise et ses futurs clients. Il doit permettre de comprendre votre activité, découvrir vos services et vous contacter facilement. SABAN CORP conçoit des expériences digitales qui répondent à ces besoins, sans complexité inutile.</p>
           </div>
           <div className="value-grid">
             {[
-              ["01", "Une image professionnelle", "Valorisez votre entreprise avec une présence digitale claire, moderne et cohérente.", Layers3],
-              ["02", "Une expérience efficace", "Facilitez la navigation, les prises de contact et les demandes de vos futurs clients.", Compass],
-              ["03", "Des solutions adaptées", "Bénéficiez d'un accompagnement technique construit autour de vos besoins réels.", Braces],
+              ["01", "Une image professionnelle", "Présentez votre activité avec un site clair, moderne et cohérent avec la qualité de votre travail.", Layers3],
+              ["02", "Des contacts facilités", "Aidez vos visiteurs à trouver les bonnes informations et à vous adresser leur demande simplement.", Compass],
+              ["03", "Une solution adaptée", "Investissez dans les fonctionnalités réellement utiles à votre activité, sans complexité superflue.", Braces],
             ].map(([num, title, text, Icon], index) => {
               const IconComponent = Icon as typeof Layers3;
               return (
@@ -424,7 +424,7 @@ function App() {
         <section className="section solutions" id="solutions">
           <div className="section-heading reveal">
             <div><Eyebrow>02 / NOS SOLUTIONS</Eyebrow><h2>Des solutions pensées<br />pour votre activité.</h2></div>
-            <p>Des bases transparentes, ajustées après un échange précis sur votre projet.</p>
+            <p>Une présence en ligne essentielle, un site plus complet ou un accompagnement dans la durée : choisissez un point de départ adapté à vos besoins.</p>
           </div>
           <div className="pricing-grid">
             {solutions.map((solution, index) => (
@@ -449,8 +449,8 @@ function App() {
         <section className="section expertise-section">
           <div className="section-intro reveal">
             <Eyebrow>03 / NOS EXPERTISES</Eyebrow>
-            <h2>La bonne technologie.<br />Pour le bon besoin.</h2>
-            <p>Nous traduisons la technique en solutions concrètes, utiles aujourd'hui et capables d'évoluer demain.</p>
+            <h2>La technique au service de vos objectifs.</h2>
+            <p>Chaque entreprise a ses propres besoins. Nous privilégions les solutions adaptées à votre activité, à votre budget et à votre manière de travailler.</p>
           </div>
           <div className="expertise-grid">
             {expertise.map((item, index) => {
@@ -467,22 +467,20 @@ function App() {
           </div>
         </section>
 
-        <section className="section projects" id="realisations">
+        <section className="section projects" id="cas-usage">
           <div className="section-heading reveal">
-            <div><Eyebrow>04 / NOTRE SAVOIR-FAIRE</Eyebrow><h2>Des projets qui donnent<br />vie aux idées.</h2></div>
-            <p>Une sélection de compositions de démonstration, en attendant la publication de projets autorisés.</p>
+            <div><Eyebrow>04 / CAS D'USAGE</Eyebrow><h2>Des solutions pour des besoins concrets.</h2></div>
+            <p>Chaque projet part d'un besoin précis. Voici trois situations dans lesquelles un site ou un outil digital peut faire la différence.</p>
           </div>
           <div className="projects-grid">
-            {projects.map((project, index) => (
-              <article className={`project-card reveal ${index === 0 ? "project-large" : ""}`} key={project.title}>
-                <div className={`project-visual ${project.visual}`}>
-                  <div className="mock-window"><span /><span /><span /></div>
+            {useCases.map((useCase, index) => (
+              <article className={`project-card reveal ${index === 0 ? "project-large" : ""}`} key={useCase.title}>
+                <div className={`project-visual ${useCase.visual}`} aria-hidden="true">
                   <div className="project-shape shape-one" />
                   <div className="project-shape shape-two" />
-                  <span className="demo-label">VISUEL DE DÉMONSTRATION</span>
                 </div>
                 <div className="project-info">
-                  <div><span>{project.type}</span><h3>{project.title}</h3><p>{project.text}</p></div>
+                  <div><span>{useCase.type}</span><h3>{useCase.title}</h3><p>{useCase.text}</p></div>
                 </div>
               </article>
             ))}
@@ -496,10 +494,10 @@ function App() {
           </div>
           <div className="process-list">
             {[
-              ["01", "Échange", "Nous prenons le temps de comprendre votre activité, vos besoins et vos objectifs."],
-              ["02", "Proposition", "Nous définissons une solution, un périmètre et un budget adaptés."],
-              ["03", "Création", "Nous concevons et développons votre solution avec des échanges réguliers."],
-              ["04", "Lancement", "Nous finalisons les vérifications et vous accompagnons dans la mise en ligne."],
+              ["01", "Échange", "Nous échangeons sur votre activité, vos besoins et les objectifs de votre projet."],
+              ["02", "Proposition", "Vous recevez une proposition précisant la solution, le périmètre et le budget envisagés."],
+              ["03", "Création", "Votre site ou votre solution prend forme avec des points d'échange aux étapes importantes."],
+              ["04", "Lancement", "Nous réalisons les dernières vérifications et préparons la mise en ligne."],
             ].map(([num, title, text], index) => (
               <article className="process-step reveal" style={{ "--delay": `${index * 100}ms` } as React.CSSProperties} key={num}>
                 <div className="step-marker"><span>{num}</span><i /></div>
@@ -510,21 +508,24 @@ function App() {
         </section>
 
         <section className="section about" id="a-propos">
-          <div className="portrait-placeholder reveal">
+          <div className="founder-identity reveal">
             <div className="portrait-grid" />
-            <div className="portrait-monogram">YC</div>
-            <span>EMPLACEMENT PORTRAIT</span>
-            <small>Photographie du fondateur à intégrer</small>
+            <div className="portrait-monogram" aria-hidden="true"><span>YC</span></div>
+            <span>Yves-Christophe Saban</span>
+            <small>Fondateur &amp; développeur web</small>
+            <small>Toulouse, France</small>
           </div>
           <div className="about-content reveal">
-            <Eyebrow>06 / À PROPOS</Eyebrow>
-            <h2>Une expertise technique.<br />Une approche humaine.</h2>
+            <Eyebrow>06 / LE FONDATEUR</Eyebrow>
+            <h2>Une expertise technique.<br />Un interlocuteur direct.</h2>
             <div className="about-copy">
-              <p>Je suis Yves-Christophe, développeur web indépendant basé à Toulouse et fondateur de SABAN CORP.</p>
-              <p>J'accompagne les professionnels dans la conception de sites internet et de solutions digitales adaptées à leur activité.</p>
-              <p>Mon approche associe expertise technique, simplicité et attention portée aux besoins de chaque projet.</p>
+              <p>Je suis Yves-Christophe Saban, développeur web basé à Toulouse et fondateur de SABAN CORP.</p>
+              <p>Mon parcours m'a amené à concevoir, faire évoluer et maintenir des sites internet et des solutions web pour des organisations aux besoins variés.</p>
+              <p>Avec SABAN CORP, je mets cette expérience au service des professionnels qui souhaitent disposer d'un site soigné, utile et adapté à leur activité.</p>
+              <p>De notre premier échange jusqu'à la mise en ligne, vous échangez directement avec la personne qui conçoit et développe votre projet.</p>
+              <p>Mon objectif : vous proposer une solution que vous comprenez, qui répond à vos besoins et dont vous pouvez réellement vous servir.</p>
             </div>
-            <div className="tags">{["WordPress", "React", "JavaScript", "PHP", "Solutions IA"].map((tag) => <span key={tag}>{tag}</span>)}</div>
+            <div className="tags">{["WordPress", "Développement web", "React", "PHP", "Solutions sur mesure"].map((tag) => <span key={tag}>{tag}</span>)}</div>
           </div>
         </section>
 
@@ -532,10 +533,11 @@ function App() {
           <div className="contact-copy reveal">
             <Eyebrow>07 / PRENONS CONTACT</Eyebrow>
             <h2>Parlons de votre<br />prochain projet.</h2>
-            <p>Vous souhaitez moderniser votre site, améliorer votre présence en ligne ou développer une solution digitale ? Échangeons sur vos besoins.</p>
+            <p>Vous souhaitez créer un site internet, moderniser votre présence en ligne ou développer une fonctionnalité adaptée à votre activité ? Présentez votre projet et vos besoins. Nous pourrons faire le point sur la solution la plus pertinente.</p>
             <div className="contact-detail">
               <span>CONTACT DIRECT</span>
-              <p>Les coordonnées directes seront configurées avant la mise en ligne.</p>
+              <p>Email : <a href="mailto:sabancorp31@gmail.com">sabancorp31@gmail.com</a></p>
+              <p>Téléphone : <a href="tel:+33631821362">06 31 82 13 62</a></p>
             </div>
           </div>
           <form className="contact-form reveal" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" aria-busy={submitStatus === "sending"} onSubmit={handleContactSubmit} onChange={() => {
@@ -571,7 +573,7 @@ function App() {
 
       <footer inert={menuOpen}>
         <div className="footer-main">
-          <div><a href="/" aria-label="Saban Corp — Accueil"><Brand /></a><p>Des expériences digitales précises, utiles et durables.</p></div>
+          <div><a href="/" aria-label="Saban Corp — Accueil"><Brand /></a><p>Sites web et solutions digitales pour les professionnels.</p></div>
           <div className="footer-nav">{navItems.slice(1).map(([label, href]) => <a href={homeHref(href)} key={href}>{label}</a>)}</div>
           <div className="footer-location"><span>LOCALISATION</span><p>Toulouse, France</p></div>
         </div>
