@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import LegalPage, { type LegalPageKind } from "./LegalPages";
 import {
   ArrowDown,
   ArrowRight,
@@ -26,6 +27,13 @@ const navItems = [
   ["À propos", "#a-propos"],
   ["Contact", "#contact"],
 ];
+
+const legalPageByPath: Record<string, LegalPageKind> = {
+  "/mentions-legales": "mentions",
+  "/mentions-legales.html": "mentions",
+  "/politique-de-confidentialite": "confidentialite",
+  "/politique-de-confidentialite.html": "confidentialite",
+};
 
 const solutions = [
   {
@@ -131,8 +139,6 @@ const projects = [
 
 type SubmitStatus = "idle" | "sending" | "success" | "error";
 
-const privacyPolicyUrl = import.meta.env.VITE_PRIVACY_POLICY_URL?.trim();
-
 function Brand() {
   return (
     <span className="brand" aria-label="Saban Corp">
@@ -206,6 +212,9 @@ function Sculpture() {
 }
 
 function App() {
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+  const legalPage = legalPageByPath[path] ?? null;
+  const homeHref = (href: string) => legalPage ? `/${href}` : href;
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
@@ -215,7 +224,7 @@ function App() {
   const submissionInFlightRef = useRef(false);
 
   function closeMobileMenu(href: string) {
-    pendingFocusTargetRef.current = href;
+    if (!legalPage) pendingFocusTargetRef.current = href;
     setMenuOpen(false);
   }
 
@@ -323,28 +332,49 @@ function App() {
     return () => mobile.removeEventListener("change", closeOnDesktop);
   }, []);
 
+  useEffect(() => {
+    if (legalPage) {
+      window.scrollTo(0, 0);
+      document.querySelector<HTMLElement>(".legal-heading h1")?.focus({ preventScroll: true });
+      return;
+    }
+
+    if (window.location.hash) {
+      const frame = window.requestAnimationFrame(() => {
+        const target = document.getElementById(window.location.hash.slice(1));
+        if (target) {
+          target.tabIndex = -1;
+          target.scrollIntoView();
+          target.focus({ preventScroll: true });
+        }
+      });
+      return () => window.cancelAnimationFrame(frame);
+    }
+  }, [legalPage]);
+
   return (
     <div className="site-shell">
       <header className={`nav ${scrolled ? "nav-scrolled" : ""}`}>
-        <a href="#accueil" className="brand-link" aria-label="Saban Corp — Accueil" onClick={() => setMenuOpen(false)}><Brand /></a>
+        <a href={legalPage ? "/" : "#accueil"} className="brand-link" aria-label="Saban Corp — Accueil" onClick={() => setMenuOpen(false)}><Brand /></a>
         <nav className="desktop-nav" aria-label="Navigation principale">
-          {navItems.map(([label, href]) => <a href={href} key={href}>{label}</a>)}
+          {navItems.map(([label, href]) => <a href={homeHref(href)} key={href}>{label}</a>)}
         </nav>
-        <a className="nav-cta" href="#contact">Parlons de votre projet <ArrowRight size={15} /></a>
+        <a className="nav-cta" href={homeHref("#contact")}>Parlons de votre projet <ArrowRight size={15} /></a>
         <button ref={menuToggleRef} className="menu-toggle" type="button" onClick={() => setMenuOpen(!menuOpen)} aria-controls="mobile-navigation" aria-expanded={menuOpen} aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}>
           {menuOpen ? <X /> : <Menu />}
         </button>
         <nav id="mobile-navigation" ref={mobileNavRef} className={`mobile-nav ${menuOpen ? "mobile-nav-open" : ""}`} aria-label="Navigation mobile" aria-hidden={!menuOpen}>
           {navItems.map(([label, href], index) => (
-            <a href={href} key={href} onClick={() => closeMobileMenu(href)}>
+            <a href={homeHref(href)} key={href} onClick={() => closeMobileMenu(href)}>
               <span>0{index + 1}</span>{label}<ChevronRight size={18} />
             </a>
           ))}
-          <ButtonLink href="#contact" className="mobile-contact" onClick={() => closeMobileMenu("#contact")}>Parlons de votre projet</ButtonLink>
+          <ButtonLink href={homeHref("#contact")} className="mobile-contact" onClick={() => closeMobileMenu("#contact")}>Parlons de votre projet</ButtonLink>
         </nav>
       </header>
 
       <main inert={menuOpen}>
+        {legalPage ? <LegalPage kind={legalPage} /> : <>
         <section className="hero section-grid" id="accueil">
           <div className="hero-grid-bg" />
           <div className="hero-content">
@@ -525,7 +555,7 @@ function App() {
               </select>
             </label>
             <label>Votre besoin *<textarea name="message" rows={4} placeholder="Parlez-nous de votre activité, de vos objectifs et de vos délais..." required /></label>
-            <p className="privacy-note">Les informations saisies servent à répondre à votre demande. {privacyPolicyUrl ? <a href={privacyPolicyUrl}>Consulter la politique de confidentialité</a> : <span>La politique de confidentialité sera publiée prochainement.</span>}</p>
+            <p className="privacy-note">Les informations transmises sont utilisées pour répondre à votre demande et, si nécessaire, préparer une proposition commerciale. Pour en savoir plus, consultez notre <a href="/politique-de-confidentialite">Politique de confidentialité</a>.</p>
             <button className="button submit-button" type="submit" disabled={submitStatus === "sending"}>
               <span>{submitStatus === "sending" ? "Envoi en cours…" : "Envoyer ma demande"}</span>
               <ArrowRight size={17} />
@@ -536,18 +566,19 @@ function App() {
             </div>
           </form>
         </section>
+        </>}
       </main>
 
       <footer inert={menuOpen}>
         <div className="footer-main">
-          <div><Brand /><p>Des expériences digitales précises, utiles et durables.</p></div>
-          <div className="footer-nav">{navItems.slice(1).map(([label, href]) => <a href={href} key={href}>{label}</a>)}</div>
+          <div><a href="/" aria-label="Saban Corp — Accueil"><Brand /></a><p>Des expériences digitales précises, utiles et durables.</p></div>
+          <div className="footer-nav">{navItems.slice(1).map(([label, href]) => <a href={homeHref(href)} key={href}>{label}</a>)}</div>
           <div className="footer-location"><span>LOCALISATION</span><p>Toulouse, France</p></div>
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} SABAN CORP</span>
           <span>Studio digital indépendant</span>
-          <div><span>Mentions légales — à venir</span><span>Confidentialité — à venir</span></div>
+          <div><a href="/mentions-legales" aria-current={legalPage === "mentions" ? "page" : undefined}>Mentions légales</a><a href="/politique-de-confidentialite" aria-current={legalPage === "confidentialite" ? "page" : undefined}>Politique de confidentialité</a></div>
         </div>
       </footer>
     </div>

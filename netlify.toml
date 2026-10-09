@@ -1,3 +1,27 @@
 [build]
   command = "pnpm build"
   publish = "dist"
+
+[[redirects]]
+  from = "/mentions-legales"
+  to = "/mentions-legales.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/mentions-legales/"
+  to = "/mentions-legales.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/politique-de-confidentialite"
+  to = "/politique-de-confidentialite.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/politique-de-confidentialite/"
+  to = "/politique-de-confidentialite.html"
+  status = 200
+  force = true
