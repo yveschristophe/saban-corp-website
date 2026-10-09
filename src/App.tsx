@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowDown,
   ArrowRight,
@@ -149,14 +149,16 @@ function ButtonLink({
   href,
   secondary = false,
   className = "",
+  onClick,
 }: {
   children: React.ReactNode;
   href: string;
   secondary?: boolean;
   className?: string;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }) {
   return (
-    <a className={`button ${secondary ? "button-secondary" : ""} ${className}`} href={href}>
+    <a className={`button ${secondary ? "button-secondary" : ""} ${className}`} href={href} onClick={onClick}>
       <span>{children}</span>
       <ArrowRight size={17} strokeWidth={1.7} />
     </a>
@@ -203,8 +205,6 @@ function Sculpture() {
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [formState, setFormState] = useState<"idle" | "loading" | "success">("idle");
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -221,21 +221,6 @@ function App() {
       observer.disconnect();
     };
   }, []);
-
-  function submitForm(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const nextErrors: Record<string, string> = {};
-    if (!String(data.get("name") || "").trim()) nextErrors.name = "Indiquez votre nom.";
-    const email = String(data.get("email") || "");
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) nextErrors.email = "Saisissez une adresse email valide.";
-    if (!data.get("project")) nextErrors.project = "Sélectionnez un type de projet.";
-    if (String(data.get("message") || "").trim().length < 20) nextErrors.message = "Décrivez votre besoin en quelques mots (20 caractères minimum).";
-    setErrors(nextErrors);
-    if (Object.keys(nextErrors).length) return;
-    setFormState("loading");
-    window.setTimeout(() => setFormState("success"), 900);
-  }
 
   return (
     <div className="site-shell">
@@ -254,7 +239,7 @@ function App() {
               <span>0{index + 1}</span>{label}<ChevronRight size={18} />
             </a>
           ))}
-          <ButtonLink href="#contact" className="mobile-contact">Parlons de votre projet</ButtonLink>
+          <ButtonLink href="#contact" className="mobile-contact" onClick={() => setMenuOpen(false)}>Parlons de votre projet</ButtonLink>
         </div>
       </header>
 
@@ -423,33 +408,25 @@ function App() {
               <p>Les coordonnées directes seront configurées avant la mise en ligne.</p>
             </div>
           </div>
-          <form className="contact-form reveal" onSubmit={submitForm} noValidate>
+          <form className="contact-form reveal" onSubmit={(event) => event.preventDefault()}>
+            <p className="form-note" role="status">Formulaire de démonstration : l'envoi est désactivé dans cette preview. Aucune demande n'est transmise.</p>
             <div className="form-row">
-              <label>Nom *<input name="name" type="text" placeholder="Votre nom" aria-invalid={!!errors.name} /></label>
+              <label>Nom *<input name="name" type="text" placeholder="Votre nom" /></label>
               <label>Entreprise<input name="company" type="text" placeholder="Nom de votre entreprise" /></label>
             </div>
-            {errors.name && <p className="field-error">{errors.name}</p>}
-            <label>Email professionnel *<input name="email" type="email" placeholder="vous@entreprise.fr" aria-invalid={!!errors.email} /></label>
-            {errors.email && <p className="field-error">{errors.email}</p>}
+            <label>Email professionnel *<input name="email" type="email" placeholder="vous@entreprise.fr" /></label>
             <label>Type de projet *
-              <select name="project" defaultValue="" aria-invalid={!!errors.project}>
+              <select name="project" defaultValue="">
                 <option value="" disabled>Sélectionnez une option</option>
                 <option>Création de site</option><option>Refonte de site</option><option>Visibilité locale</option><option>Maintenance</option><option>Autre projet</option>
               </select>
             </label>
-            {errors.project && <p className="field-error">{errors.project}</p>}
-            <label>Votre besoin *<textarea name="message" rows={4} placeholder="Parlez-nous de votre activité, de vos objectifs et de vos délais..." aria-invalid={!!errors.message} /></label>
-            {errors.message && <p className="field-error">{errors.message}</p>}
+            <label>Votre besoin *<textarea name="message" rows={4} placeholder="Parlez-nous de votre activité, de vos objectifs et de vos délais..." /></label>
             <label className="consent"><input type="checkbox" required /><span>J'accepte que mes informations soient utilisées uniquement pour répondre à ma demande. Aucun usage commercial sans mon accord.</span></label>
-            {formState === "success" ? (
-              <div className="form-success"><Check size={20} /><span><strong>Votre demande est prête.</strong> Le formulaire est validé ; le service d'envoi devra être connecté avant la mise en ligne.</span></div>
-            ) : (
-              <button className="button submit-button" type="submit" disabled={formState === "loading"}>
-                <span>{formState === "loading" ? "Validation en cours…" : "Envoyer ma demande"}</span>
-                <ArrowRight size={17} />
-              </button>
-            )}
-            <p className="form-note">Prototype fonctionnel — aucun message n'est envoyé tant qu'un service de formulaire n'est pas configuré.</p>
+            <button className="button submit-button" type="button" disabled>
+              <span>Envoi indisponible en preview</span>
+              <ArrowRight size={17} />
+            </button>
           </form>
         </section>
       </main>

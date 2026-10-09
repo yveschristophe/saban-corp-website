@@ -228,7 +228,7 @@ h1 span:nth-child(3) { animation-delay: .26s; }
 .field-error { color: #d19393; font-size: 9px; margin: -17px 0 17px; }
 .submit-button { width: 100%; }
 .submit-button:disabled { opacity: .65; cursor: wait; }
-.form-note { margin: 12px 0 0; color: var(--graphite); font-size: 8px; line-height: 1.5; text-align: center; }
+.form-note { margin: 0 0 25px; color: var(--accent-soft); font-size: 12px; line-height: 1.5; }
 .form-success { min-height: 62px; border: 1px solid rgba(101,159,201,.5); color: var(--accent-soft); padding: 15px; display: flex; gap: 13px; align-items: center; font-size: 11px; line-height: 1.5; }
 .form-success strong { display: block; color: var(--text); }
 
