@@ -12,7 +12,6 @@ import {
   Layers3,
   Menu,
   MonitorSmartphone,
-  ScanLine,
   Search,
   Sparkles,
   Workflow,
@@ -121,19 +120,28 @@ const useCases = [
     type: "SITE VITRINE",
     title: "Présenter son activité avec confiance.",
     text: "Une vitrine professionnelle pour expliquer vos prestations, valoriser votre savoir-faire et rendre vos coordonnées accessibles.",
-    visual: "visual-one",
+    image: "/images/artisan-pottery.webp",
+    imageWidth: 1600,
+    imageHeight: 1067,
+    imageAlt: "Homme façonnant un vase en terre dans un atelier de poterie.",
   },
   {
     type: "REFONTE WEB",
     title: "Donner un nouveau souffle à son image.",
     text: "Une interface plus actuelle, une navigation claire et une expérience pensée pour les visiteurs sur ordinateur comme sur mobile.",
-    visual: "visual-two",
+    image: "/images/premium-workspace.webp",
+    imageWidth: 1100,
+    imageHeight: 733,
+    imageAlt: "Ordinateur portable, appareil photo et carnet sur un bureau sombre.",
   },
   {
     type: "OUTILS DIGITAUX",
     title: "Faciliter les échanges et gagner du temps.",
     text: "Formulaires avancés, prise de rendez-vous ou fonctionnalités personnalisées : des outils adaptés à votre fonctionnement.",
-    visual: "visual-three",
+    image: "/images/mobile-workflow.webp",
+    imageWidth: 1100,
+    imageHeight: 734,
+    imageAlt: "Personne consultant un smartphone à un bureau avec ordinateur.",
   },
 ];
 
@@ -182,7 +190,7 @@ function Sculpture() {
   const ref = useRef<HTMLDivElement>(null);
 
   function handleMove(event: React.MouseEvent<HTMLDivElement>) {
-    if (!ref.current) return;
+    if (!ref.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const bounds = ref.current.getBoundingClientRect();
     const x = (event.clientX - bounds.left) / bounds.width - 0.5;
     const y = (event.clientY - bounds.top) / bounds.height - 0.5;
@@ -191,22 +199,42 @@ function Sculpture() {
   }
 
   return (
-    <div className="sculpture-wrap" ref={ref} onMouseMove={handleMove} onMouseLeave={() => {
+    <div className="sculpture-wrap" ref={ref} aria-hidden="true" onMouseMove={handleMove} onMouseLeave={() => {
       ref.current?.style.setProperty("--pointer-x", "0deg");
       ref.current?.style.setProperty("--pointer-y", "0deg");
     }}>
       <div className="sculpture-halo" />
-      <div className="sculpture">
-        <div className="slab slab-a"><span /></div>
-        <div className="slab slab-b"><span /></div>
-        <div className="slab slab-c"><span /></div>
-        <div className="core"><i /></div>
-        <div className="orbit orbit-a" />
-        <div className="orbit orbit-b" />
-      </div>
+      <svg className="kinetic-art" viewBox="0 0 560 560" focusable="false">
+        <defs>
+          <linearGradient id="ring-metal" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#101820" />
+            <stop offset=".2" stopColor="#334452" />
+            <stop offset=".42" stopColor="#7d919e" />
+            <stop offset=".52" stopColor="#293643" />
+            <stop offset=".77" stopColor="#111920" />
+            <stop offset="1" stopColor="#536978" />
+          </linearGradient>
+          <linearGradient id="ring-edge" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stopColor="#0a1017" />
+            <stop offset=".5" stopColor="#a5bdcb" />
+            <stop offset="1" stopColor="#17232d" />
+          </linearGradient>
+        </defs>
+        <circle className="kinetic-guide" cx="280" cy="280" r="242" />
+        <g className="kinetic-secondary">
+          <ellipse className="kinetic-shadow" cx="280" cy="280" rx="112" ry="214" transform="rotate(58 280 280)" strokeWidth="27" />
+          <ellipse className="kinetic-metal" cx="280" cy="280" rx="112" ry="214" transform="rotate(58 280 280)" strokeWidth="19" strokeDasharray="91 9" pathLength="100" />
+          <ellipse className="kinetic-edge" cx="280" cy="280" rx="112" ry="214" transform="rotate(58 280 280)" strokeWidth="1.5" strokeDasharray="91 9" pathLength="100" />
+        </g>
+        <g className="kinetic-primary">
+          <ellipse className="kinetic-shadow" cx="280" cy="280" rx="174" ry="211" transform="rotate(-23 280 280)" strokeWidth="48" />
+          <ellipse className="kinetic-metal" cx="280" cy="280" rx="174" ry="211" transform="rotate(-23 280 280)" strokeWidth="36" strokeDasharray="88 12" pathLength="100" />
+          <ellipse className="kinetic-edge" cx="280" cy="280" rx="174" ry="211" transform="rotate(-23 280 280)" strokeWidth="2" strokeDasharray="88 12" pathLength="100" />
+        </g>
+      </svg>
       <div className="sculpture-floor" />
-      <div className="tech-label label-top"><ScanLine size={13} /> STRUCTURE / 001</div>
-      <div className="tech-label label-bottom">MOUVEMENT ADAPTATIF</div>
+      <div className="tech-label label-top">FORME / 001</div>
+      <div className="tech-label label-bottom">MOUVEMENT CINÉTIQUE</div>
     </div>
   );
 }
@@ -475,9 +503,8 @@ function App() {
           <div className="projects-grid">
             {useCases.map((useCase, index) => (
               <article className={`project-card reveal ${index === 0 ? "project-large" : ""}`} key={useCase.title}>
-                <div className={`project-visual ${useCase.visual}`} aria-hidden="true">
-                  <div className="project-shape shape-one" />
-                  <div className="project-shape shape-two" />
+                <div className="project-visual">
+                  <img src={useCase.image} alt={useCase.imageAlt} width={useCase.imageWidth} height={useCase.imageHeight} loading="lazy" decoding="async" />
                 </div>
                 <div className="project-info">
                   <div><span>{useCase.type}</span><h3>{useCase.title}</h3><p>{useCase.text}</p></div>
