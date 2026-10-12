@@ -1,5 +1,7 @@
 # SABAN CORP — Brand experience V2
 
+Ce rapport décrit la V2 initiale. Pour la sculpture et les captures actuelles de la V2.1, voir [le rapport V2.1](brand-experience-v2-1.md).
+
 Base : `feat/figma-integration`, commit `962e96a` (V1.4). Travail sur `feat/brand-experience-v2`.
 
 ## Audit et choix techniques

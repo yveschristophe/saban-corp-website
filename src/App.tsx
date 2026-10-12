@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import LegalPage, { type LegalPageKind } from "./LegalPages";
-import ArchitecturalScene from "./components/ArchitecturalScene";
+import StrateSculpture from "./components/StrateSculpture";
 import Showcase from "./components/Showcase";
 import {
   ArrowDown,
@@ -330,7 +330,7 @@ function App() {
             </div>
             <div className="trust-line"><CircleDot size={14} /> Toulouse, France <i /> Un interlocuteur dédié</div>
           </div>
-          <div className="hero-sculpture"><ArchitecturalScene /></div>
+          <div className="hero-sculpture"><StrateSculpture /></div>
           <a href="#mission" className="scroll-cue"><ArrowDown size={16} /> Explorer</a>
           <span className="hero-index">00 — 07</span>
         </section>
