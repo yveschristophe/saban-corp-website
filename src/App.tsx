@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import LegalPage, { type LegalPageKind } from "./LegalPages";
+import StrateSculpture from "./components/StrateSculpture";
+import Showcase from "./components/Showcase";
 import {
   ArrowDown,
   ArrowRight,
@@ -21,7 +23,7 @@ import {
 const navItems = [
   ["Accueil", "#accueil"],
   ["Solutions", "#solutions"],
-  ["Cas d'usage", "#cas-usage"],
+  ["Démonstrations", "#cas-usage"],
   ["Notre approche", "#approche"],
   ["À propos", "#a-propos"],
   ["Contact", "#contact"],
@@ -115,50 +117,12 @@ const expertise = [
   },
 ];
 
-const useCases = [
-  {
-    type: "SITE VITRINE",
-    title: "Présenter son activité avec confiance.",
-    text: "Une vitrine professionnelle pour expliquer vos prestations, valoriser votre savoir-faire et rendre vos coordonnées accessibles.",
-    image: "/images/artisan-pottery.webp",
-    imageWidth: 1600,
-    imageHeight: 1067,
-    imageAlt: "Homme façonnant un vase en terre dans un atelier de poterie.",
-  },
-  {
-    type: "REFONTE WEB",
-    title: "Donner un nouveau souffle à son image.",
-    text: "Une interface plus actuelle, une navigation claire et une expérience pensée pour les visiteurs sur ordinateur comme sur mobile.",
-    image: "/images/premium-workspace.webp",
-    imageWidth: 1100,
-    imageHeight: 733,
-    imageAlt: "Ordinateur portable, appareil photo et carnet sur un bureau sombre.",
-  },
-  {
-    type: "OUTILS DIGITAUX",
-    title: "Faciliter les échanges et gagner du temps.",
-    text: "Formulaires avancés, prise de rendez-vous ou fonctionnalités personnalisées : des outils adaptés à votre fonctionnement.",
-    image: "/images/mobile-workflow.webp",
-    imageWidth: 1100,
-    imageHeight: 734,
-    imageAlt: "Personne consultant un smartphone à un bureau avec ordinateur.",
-  },
-];
-
 type SubmitStatus = "idle" | "sending" | "success" | "error";
 
-function Brand() {
-  return (
-    <span className="brand" aria-label="Saban Corp">
-      <span className="brand-mark" aria-hidden="true">
-        <i />
-        <i />
-      </span>
-      <span className="brand-name">
-        SABAN <b>CORP</b>
-      </span>
-    </span>
-  );
+function Brand({ signature = false }: { signature?: boolean }) {
+  return <img className={signature ? "brand-logo brand-signature" : "brand-logo"}
+    src={`/brand/logo-${signature ? "signature" : "horizontal"}-light.svg`}
+    alt="SABAN CORP" width={signature ? 415 : 278} height={signature ? 433 : 79} />;
 }
 
 function ButtonLink({
@@ -184,59 +148,6 @@ function ButtonLink({
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return <p className="eyebrow">{children}</p>;
-}
-
-function Sculpture() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  function handleMove(event: React.MouseEvent<HTMLDivElement>) {
-    if (!ref.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const bounds = ref.current.getBoundingClientRect();
-    const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-    const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-    ref.current.style.setProperty("--pointer-x", `${x * 9}deg`);
-    ref.current.style.setProperty("--pointer-y", `${y * -7}deg`);
-  }
-
-  return (
-    <div className="sculpture-wrap" ref={ref} aria-hidden="true" onMouseMove={handleMove} onMouseLeave={() => {
-      ref.current?.style.setProperty("--pointer-x", "0deg");
-      ref.current?.style.setProperty("--pointer-y", "0deg");
-    }}>
-      <div className="sculpture-halo" />
-      <svg className="kinetic-art" viewBox="0 0 560 560" focusable="false">
-        <defs>
-          <linearGradient id="ring-metal" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#101820" />
-            <stop offset=".2" stopColor="#334452" />
-            <stop offset=".42" stopColor="#7d919e" />
-            <stop offset=".52" stopColor="#293643" />
-            <stop offset=".77" stopColor="#111920" />
-            <stop offset="1" stopColor="#536978" />
-          </linearGradient>
-          <linearGradient id="ring-edge" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0" stopColor="#0a1017" />
-            <stop offset=".5" stopColor="#a5bdcb" />
-            <stop offset="1" stopColor="#17232d" />
-          </linearGradient>
-        </defs>
-        <circle className="kinetic-guide" cx="280" cy="280" r="242" />
-        <g className="kinetic-secondary">
-          <ellipse className="kinetic-shadow" cx="280" cy="280" rx="112" ry="214" transform="rotate(58 280 280)" strokeWidth="27" />
-          <ellipse className="kinetic-metal" cx="280" cy="280" rx="112" ry="214" transform="rotate(58 280 280)" strokeWidth="19" strokeDasharray="91 9" pathLength="100" />
-          <ellipse className="kinetic-edge" cx="280" cy="280" rx="112" ry="214" transform="rotate(58 280 280)" strokeWidth="1.5" strokeDasharray="91 9" pathLength="100" />
-        </g>
-        <g className="kinetic-primary">
-          <ellipse className="kinetic-shadow" cx="280" cy="280" rx="174" ry="211" transform="rotate(-23 280 280)" strokeWidth="48" />
-          <ellipse className="kinetic-metal" cx="280" cy="280" rx="174" ry="211" transform="rotate(-23 280 280)" strokeWidth="36" strokeDasharray="88 12" pathLength="100" />
-          <ellipse className="kinetic-edge" cx="280" cy="280" rx="174" ry="211" transform="rotate(-23 280 280)" strokeWidth="2" strokeDasharray="88 12" pathLength="100" />
-        </g>
-      </svg>
-      <div className="sculpture-floor" />
-      <div className="tech-label label-top">FORME / 001</div>
-      <div className="tech-label label-bottom">MOUVEMENT CINÉTIQUE</div>
-    </div>
-  );
 }
 
 function App() {
@@ -352,7 +263,7 @@ function App() {
   }, [menuOpen]);
 
   useEffect(() => {
-    const mobile = window.matchMedia("(max-width: 800px)");
+    const mobile = window.matchMedia("(max-width: 1100px)");
     const closeOnDesktop = () => {
       if (!mobile.matches) setMenuOpen(false);
     };
@@ -419,7 +330,7 @@ function App() {
             </div>
             <div className="trust-line"><CircleDot size={14} /> Toulouse, France <i /> Un interlocuteur dédié</div>
           </div>
-          <div className="hero-sculpture"><Sculpture /></div>
+          <div className="hero-sculpture"><StrateSculpture /></div>
           <a href="#mission" className="scroll-cue"><ArrowDown size={16} /> Explorer</a>
           <span className="hero-index">00 — 07</span>
         </section>
@@ -497,21 +408,10 @@ function App() {
 
         <section className="section projects" id="cas-usage">
           <div className="section-heading reveal">
-            <div><Eyebrow>04 / CAS D'USAGE</Eyebrow><h2>Des solutions pour des besoins concrets.</h2></div>
-            <p>Chaque projet part d'un besoin précis. Voici trois situations dans lesquelles un site ou un outil digital peut faire la différence.</p>
+            <div><Eyebrow>04 / DÉMONSTRATIONS</Eyebrow><h2>Le détail fait<br />l’expérience.</h2></div>
+            <p>Previews réelles du site SABAN CORP, présentées comme démonstrations internes. Une expérience à découvrir sur ordinateur, mobile et tablette.</p>
           </div>
-          <div className="projects-grid">
-            {useCases.map((useCase, index) => (
-              <article className={`project-card reveal ${index === 0 ? "project-large" : ""}`} key={useCase.title}>
-                <div className="project-visual">
-                  <img src={useCase.image} alt={useCase.imageAlt} width={useCase.imageWidth} height={useCase.imageHeight} loading="lazy" decoding="async" />
-                </div>
-                <div className="project-info">
-                  <div><span>{useCase.type}</span><h3>{useCase.title}</h3><p>{useCase.text}</p></div>
-                </div>
-              </article>
-            ))}
-          </div>
+          <Showcase />
         </section>
 
         <section className="section process" id="approche">
@@ -535,13 +435,12 @@ function App() {
         </section>
 
         <section className="section about" id="a-propos">
-          <div className="founder-identity reveal">
-            <div className="portrait-grid" />
-            <div className="portrait-monogram" aria-hidden="true"><span>YC</span></div>
-            <span>Yves-Christophe Saban</span>
-            <small>Fondateur &amp; développeur web</small>
-            <small>Toulouse, France</small>
-          </div>
+          <figure className="founder-portrait reveal">
+            <div className="portrait-frame">
+              <img src="/images/portrait-fondateur.webp" alt="Yves-Christophe Saban, fondateur de SABAN CORP." width={760} height={950} loading="lazy" decoding="async" />
+            </div>
+            <figcaption><span>Yves-Christophe Saban</span><small>Fondateur &amp; développeur web</small><small>Toulouse, France</small></figcaption>
+          </figure>
           <div className="about-content reveal">
             <Eyebrow>06 / LE FONDATEUR</Eyebrow>
             <h2>Une expertise technique.<br />Un interlocuteur direct.</h2>
@@ -600,7 +499,7 @@ function App() {
 
       <footer inert={menuOpen}>
         <div className="footer-main">
-          <div><a href="/" aria-label="Saban Corp — Accueil"><Brand /></a><p>Sites web et solutions digitales pour les professionnels.</p></div>
+          <div><a href="/" aria-label="Saban Corp — Accueil"><Brand signature /></a><p>Sites web et solutions digitales pour les professionnels.</p></div>
           <div className="footer-nav">{navItems.slice(1).map(([label, href]) => <a href={homeHref(href)} key={href}>{label}</a>)}</div>
           <div className="footer-location"><span>LOCALISATION</span><p>Toulouse, France</p></div>
         </div>
