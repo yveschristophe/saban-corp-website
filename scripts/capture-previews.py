@@ -16,14 +16,15 @@ BASE = os.environ.get("CAPTURE_BASE_URL", "http://127.0.0.1:5173")
 with sync_playwright() as playwright:
     browser = playwright.chromium.launch(executable_path="/usr/bin/chromium", args=["--no-sandbox"])
     for name, width, height, section in [
-        ("desktop", 1440, 900, None), ("mobile", 390, 844, None),
+        ("desktop", 1440, 900, None), ("mobile", 390, 844, ".contact-form"),
         ("tablet", 768, 1024, "#solutions"),
+        ("method-mobile", 390, 844, "#approche"),
     ]:
         page = browser.new_page(viewport={"width": width, "height": height}, reduced_motion="reduce")
         page.goto(BASE, wait_until="networkidle")
         page.evaluate("document.fonts.ready")
         if section:
-            page.locator(section).evaluate("el => window.scrollTo(0, el.offsetTop - 76)")
+            page.locator(section).evaluate("el => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 76)")
         page.wait_for_timeout(200)
         png = OUT / f"saban-{name}.png"
         page.screenshot(path=str(png))

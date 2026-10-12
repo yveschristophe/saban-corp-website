@@ -1,7 +1,34 @@
 import { useEffect } from "react";
 import { useDepthMotion } from "./useDepthMotion";
 
-export default function ArchitecturalScene() {
+// Independent architectural geometry, not the official emblem's vector paths.
+const planes = [
+  { name: "upper", path: "M26 96 89 30H256L304 78V144L250 108V88H112L80 118V168L26 146Z" },
+  { name: "bridge", path: "M56 172 266 238V284L56 218Z" },
+  { name: "lower", path: "M14 278 72 310V332H216L246 304V254L302 276V334L238 390H82L14 336Z" },
+];
+
+function StratePlane({ name, path }: { name: string; path: string }) {
+  return (
+    <div className={`strate-tier strate-${name}`}>
+      <svg className="strate-volume" viewBox="0 0 340 430" focusable="false">
+        <defs>
+          <linearGradient id={`strate-${name}-satin`} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#535359" />
+            <stop offset=".45" stopColor="#36363c" />
+            <stop offset="1" stopColor="#25252b" />
+          </linearGradient>
+        </defs>
+        {/* Static bevels share one SVG surface; only the three tiers tilt in CSS. */}
+        <path d={path} transform="translate(14 9)" fill="#141418" />
+        <path d={path} transform="translate(7 4.5)" fill="#212126" />
+        <path className="strate-surface" d={path} fill={`url(#strate-${name}-satin)`} />
+      </svg>
+    </div>
+  );
+}
+
+export default function StrateSculpture() {
   const motion = useDepthMotion(10);
 
   useEffect(() => {
@@ -53,16 +80,13 @@ export default function ArchitecturalScene() {
   }, [motion.ref]);
 
   return (
-    <div className="architecture-scene" {...motion} aria-hidden="true">
+    <div className="architecture-scene strate-scene" {...motion} aria-hidden="true">
       <div className="architecture-grid" />
       <div className="architecture-floor" />
-      <div className="architecture-object">
-        <div className="portal portal-back"><i /></div>
-        <div className="portal portal-middle"><i /></div>
-        <div className="portal portal-front"><i /></div>
-        <div className="architecture-axis" />
+      <div className="strate-assembly">
+        {planes.map((plane) => <StratePlane {...plane} key={plane.name} />)}
       </div>
-      <div className="architecture-caption"><span>ÉTUDE DE FORME / 01</span><span>ARCHITECTURE DIGITALE</span></div>
+      <div className="architecture-caption"><span>STRATE / ÉTUDE 02</span><span>STRUCTURE & ÉQUILIBRE</span></div>
     </div>
   );
 }

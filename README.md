@@ -43,6 +43,8 @@ Les scènes du hero et des appareils utilisent CSS 3D, avec des interactions lim
 
 Voir [le rapport V2](docs/brand-experience-v2.md) pour la provenance des assets, leur régénération et les vérifications.
 
+La V2.1 remplace l’objet du hero par une sculpture STRATE et différencie les captures des démonstrations : hero, contact, offres et méthode. Le [rapport V2.1](docs/brand-experience-v2-1.md) détaille cette évolution ciblée et les tests.
+
 ## Activation et vérification Netlify Forms
 
 1. Vérifier que la détection des formulaires est activée pour le site Netlify. Déployer le build contenant le formulaire statique de `index.html`, puis vérifier que le formulaire `contact` apparaît dans l'espace Forms de Netlify. Si un formulaire est détecté pour la première fois, un nouveau déploiement peut être nécessaire après activation de la détection.

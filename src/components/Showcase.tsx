@@ -25,15 +25,15 @@ const demos = [
     cta: "Découvrir les solutions", href: "#solutions",
   },
   {
-    number: "02", kind: "phone" as const, category: "LE PARCOURS MOBILE",
-    title: "La même exigence. Sur chaque écran.",
-    text: "Une navigation simple, des contenus lisibles et une prise de contact accessible. Cette preview montre notre site dans sa version mobile.",
+    number: "02", kind: "phone" as const, category: "LE CONTACT MOBILE",
+    title: "Un premier échange, simplement.",
+    text: "Un formulaire lisible, des champs utiles et une demande facile à préparer. Cette démonstration présente le contact SABAN CORP sur mobile.",
     cta: "Parlons de votre projet", href: "#contact",
   },
   {
-    number: "03", kind: "tablet" as const, category: "UNE EXPÉRIENCE COHÉRENTE",
+    number: "03", kind: "tablet" as const, category: "LES OFFRES & LA MÉTHODE",
     title: "Des interfaces pensées comme un ensemble.",
-    text: "De la présentation des offres au premier échange, chaque détail participe à une expérience cohérente. Découvrez nos interfaces sur tablette et mobile.",
+    text: "Des offres compréhensibles et une démarche expliquée étape par étape. Ces deux vues réelles de SABAN CORP présentent les solutions sur tablette et la méthode sur mobile.",
     cta: "Découvrir notre approche", href: "#approche",
   },
 ];
@@ -45,13 +45,13 @@ function DemoStage({ kind }: { kind: DeviceKind }) {
       <div className="demo-stage-grid" aria-hidden="true" />
       <div className="device-composition">
         {kind === "laptop" && <Device kind="laptop" image="/images/previews/saban-desktop.webp" alt="Capture réelle du hero SABAN CORP sur ordinateur." width={1440} height={900} />}
-        {kind === "phone" && <Device kind="phone" image="/images/previews/saban-mobile.webp" alt="Capture réelle du site SABAN CORP sur mobile." width={390} height={844} />}
+        {kind === "phone" && <Device kind="phone" image="/images/previews/saban-mobile.webp" alt="Capture réelle du formulaire de contact SABAN CORP sur mobile." width={390} height={844} />}
         {kind === "tablet" && <>
           <Device kind="tablet" image="/images/previews/saban-tablet.webp" alt="Capture réelle des offres SABAN CORP sur tablette." width={768} height={1024} />
-          <Device kind="phone" image="/images/previews/saban-mobile.webp" alt="La même expérience SABAN CORP dans sa version mobile." width={390} height={844} />
+          <Device kind="phone" image="/images/previews/saban-method-mobile.webp" alt="Capture réelle de la méthode SABAN CORP sur mobile." width={390} height={844} />
         </>}
       </div>
-      <span className="demo-stage-note">SABAN CORP / PREVIEW INTERNE</span>
+      <span className="demo-stage-note">SABAN CORP / DÉMONSTRATION INTERNE</span>
     </div>
   );
 }
