@@ -33,7 +33,15 @@ Les pages `/mentions-legales` et `/politique-de-confidentialite` sont des entré
 PREVIEW_NOINDEX=1 pnpm build
 ```
 
-Un build normal ne reçoit pas cette balise. Les polices Manrope et Space Grotesk sont chargées depuis Google Fonts ; un réseau qui bloque ce service affichera les polices de repli.
+Un build normal ne reçoit pas cette balise. Les polices Manrope et Space Grotesk sont servies localement depuis `public/fonts`, avec leurs licences OFL. Aucune requête Google Fonts n’est nécessaire.
+
+## Expérience de marque V2
+
+Le logo A1 STRATE est extrait directement des tracés vectoriels du PDF fourni, avec l’accord du propriétaire. Les variantes et le favicon se trouvent dans `public/brand`. Le portrait sélectionné est recadré et optimisé dans `public/images/portrait-fondateur.webp`.
+
+Les scènes du hero et des appareils utilisent CSS 3D, avec des interactions limitées au pointeur fin et désactivées en mouvement réduit. Les écrans montrent des captures réelles de SABAN CORP, identifiées comme démonstrations internes. Aucune référence client n’est simulée.
+
+Voir [le rapport V2](docs/brand-experience-v2.md) pour la provenance des assets, leur régénération et les vérifications.
 
 ## Activation et vérification Netlify Forms
 
